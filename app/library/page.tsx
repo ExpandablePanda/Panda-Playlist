@@ -224,22 +224,33 @@ export default function CatalogPage() {
   const isPdf = editingSong?.tabs?.startsWith("data:application/pdf") || editingSong?.tabs?.endsWith(".pdf");
 
   return (
-    <div className="min-h-screen obsidian-bg p-8 lg:p-12 font-sans flex flex-col selection:bg-violet-500/30">
-      <div className="orb orb-purple -top-40 -left-40 w-[800px] h-[800px] opacity-10" />
+    <div className="min-h-screen obsidian-bg p-8 lg:p-12 font-sans flex flex-col selection:bg-violet-500/30 overflow-hidden relative">
+      {/* Background Orbs */}
+      <div className="orb orb-purple -top-40 -left-40 w-[800px] h-[800px] animate-slow-pulse" />
+      <div className="orb orb-purple -bottom-40 -right-40 w-[600px] h-[600px] animate-slow-pulse" style={{ animationDelay: '2s' }} />
+      <div className="orb orb-purple top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] opacity-[0.03]" />
       
-      <header className="relative z-10 flex items-center justify-between mb-12 px-4">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="tap-target glass h-12 w-12 hover:bg-white/10 flex items-center justify-center border border-white/10"><ArrowLeft size={20} className="text-white/80" /></Link>
+      <header className="relative z-10 flex items-center justify-between mb-16 px-4 animate-in fade-in slide-in-from-top duration-1000">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="tap-target glass h-14 w-14 hover:bg-white/10 flex items-center justify-center border border-white/10 group">
+            <ArrowLeft size={20} className="text-white/60 group-hover:text-white transition-colors" />
+          </Link>
           <div>
-            <h1 className="display-title text-5xl text-white leading-none not-italic font-black tracking-tighter">Master Catalog</h1>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60 mt-3">Repertoire Control Studio</p>
+            <h1 className="display-title text-6xl text-white leading-none tracking-tighter">Master Catalog</h1>
+            <div className="flex items-center gap-3 mt-4">
+              <div className="h-[1px] w-8 bg-violet-500/50" />
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40">Studio Repertoire Engine</p>
+            </div>
           </div>
         </div>
         <button 
-          onClick={() => { setEditingSong({ title: "", artist: "", album: "", songType: "original", lyrics: "", tabs: "", chords: "", defaultKey: "", tempo: "", capo: 0, tuning: "E Standard", durationEstimate: 4, artworkUrl: "" }); setActiveTab("general"); setImageError(false); setArtworkSource(null); }}
-          className="h-14 px-8 rounded-2xl bg-white text-black font-black uppercase tracking-widest text-xs flex items-center gap-3 hover:scale-105 transition-transform shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+          onClick={() => { setEditingSong({ title: "", artist: "", album: "", songType: "original", status: "active", lyrics: "", tabs: "", chords: "", defaultKey: "", tempo: "", capo: 0, tuning: "E Standard", durationEstimate: 4, artworkUrl: "" }); setActiveTab("general"); setImageError(false); setArtworkSource(null); }}
+          className="h-16 px-10 rounded-2xl bg-white text-black font-black uppercase tracking-widest text-[10px] flex items-center gap-4 hover:scale-105 active:scale-95 transition-all shadow-[0_20px_50px_rgba(255,255,255,0.15)] group"
         >
-          <Plus size={16} strokeWidth={3} /> Add Repertoire Item
+          <div className="h-6 w-6 rounded-lg bg-black text-white flex items-center justify-center group-hover:rotate-90 transition-transform">
+            <Plus size={14} strokeWidth={4} />
+          </div>
+          Add Repertoire Item
         </button>
       </header>
 
@@ -285,14 +296,14 @@ export default function CatalogPage() {
             <div>
               <div className="flex items-center gap-3 mb-4 px-4">
                  <div className="h-1.5 w-1.5 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(124,58,237,0.6)]" />
-                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80 not-italic font-bold">Originals ({originals.length})</h3>
+                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80 font-bold">Originals ({originals.length})</h3>
               </div>
               <div className="space-y-3 px-2">{originals.map(song => <CatalogItem key={song.id} song={song} isActive={editingSong?.id === song.id} onEdit={() => { setEditingSong(song); setActiveTab("general"); setImageError(false); setArtworkSource(null); }} onDelete={() => handleDelete(song.id)} />)}</div>
             </div>
             <div>
               <div className="flex items-center gap-3 mb-4 px-4">
                  <div className="h-1.5 w-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(251,146,60,0.6)]" />
-                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80 not-italic font-bold">Covers ({covers.length})</h3>
+                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-white/80 font-bold">Covers ({covers.length})</h3>
               </div>
               <div className="space-y-3 px-2">{covers.map(song => <CatalogItem key={song.id} song={song} isActive={editingSong?.id === song.id} onEdit={() => { setEditingSong(song); setActiveTab("general"); setImageError(false); setArtworkSource(null); }} onDelete={() => handleDelete(song.id)} />)}</div>
             </div>
@@ -307,7 +318,7 @@ export default function CatalogPage() {
                 <div className="flex flex-col gap-4">
                   <div className="flex items-center gap-4">
                     <div className="h-10 w-10 rounded-xl bg-violet-600/20 flex items-center justify-center text-violet-400"><Zap size={20} /></div>
-                    <h2 className="display-title text-3xl text-white not-italic font-black">{editingSong.title || "New Repertoire"}</h2>
+                    <h2 className="display-title text-4xl text-white font-black tracking-tight">{editingSong.title || "New Repertoire"}</h2>
                   </div>
                   <div className="flex gap-2 p-1 rounded-xl glass border-white/10 w-fit bg-white/[0.02]">
                      {[{ id: 'general', label: 'General', icon: <Layout size={14} /> }, { id: 'lyrics', label: 'Lyrics', icon: <Type size={14} /> }, { id: 'assets', label: 'Performance Assets', icon: <FileText size={14} /> }].map((tab) => (
@@ -475,7 +486,7 @@ function CatalogItem({ song, isActive, onEdit, onDelete }: { song: Song, isActiv
         <div className="h-10 w-10 rounded-xl overflow-hidden glass bg-white/10 border border-white/5">
           {song.artworkUrl ? <img src={song.artworkUrl} className="w-full h-full object-cover" /> : <Music2 size={16} className="text-white/40 m-3" />}
         </div>
-        <div className="text-left"><h4 className="font-bold text-white text-base leading-none mb-1 not-italic">{song.title}</h4><p className="text-[10px] font-black uppercase tracking-widest text-white/60">{song.artist}</p></div>
+        <div className="text-left"><h4 className="font-bold text-white text-base leading-none mb-1">{song.title}</h4><p className="text-[10px] font-black uppercase tracking-widest text-white/60">{song.artist}</p></div>
       </div>
       <div className="flex items-center gap-4">
          <div className={`px-2 py-0.5 rounded text-[7px] font-black uppercase border ${song.songType === 'original' ? 'bg-violet-600 text-white border-violet-500' : 'bg-amber-600 text-white border-amber-500'}`}>{song.songType}</div>

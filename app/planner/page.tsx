@@ -244,11 +244,13 @@ function PlannerContent() {
   const totalTime = Math.round(setlist.reduce((acc, curr) => acc + (curr.song?.durationEstimate || 0), 0));
 
   return (
-    <div className="min-h-screen obsidian-bg p-6 lg:p-10 flex flex-col font-sans selection:bg-violet-500/30">
-      <div className="orb orb-purple -top-40 -left-40 w-[800px] h-[800px] opacity-10" />
+    <div className="min-h-screen obsidian-bg p-6 lg:p-10 flex flex-col font-sans selection:bg-violet-500/30 overflow-hidden relative">
+      {/* Background Orbs */}
+      <div className="orb orb-purple -top-40 -left-40 w-[800px] h-[800px] animate-slow-pulse" />
+      <div className="orb orb-purple -bottom-40 -right-40 w-[600px] h-[600px] animate-slow-pulse" style={{ animationDelay: '2s' }} />
       
       {/* Header */}
-      <div className="relative z-10 flex items-center justify-between mb-12 px-4">
+      <div className="relative z-10 flex items-center justify-between mb-12 px-4 animate-in fade-in slide-in-from-top duration-1000">
         <div className="flex items-center gap-6">
           <Link href="/" className="tap-target glass h-10 w-10 hover:bg-white/10 text-white/60 hover:text-white transition-all flex items-center justify-center border border-white/10">
              <Home size={18} />
@@ -297,7 +299,7 @@ function PlannerContent() {
           <div className="flex items-end justify-between mb-8 px-2">
             <div className="flex-1">
               <div className="flex items-start gap-4">
-                 <h1 className="display-title text-6xl text-white mb-2 leading-none tracking-tighter not-italic font-black">
+                 <h1 className="display-title text-6xl text-white mb-2 leading-none tracking-tighter">
                    {currentShow ? `Setlist: ${currentShow.venue}` : "Current Setlist"}
                  </h1>
                  {currentShow && (
@@ -388,7 +390,7 @@ function PlannerContent() {
         {/* RIGHT COLUMN: LIBRARY */}
         <aside className="lg:col-span-4 flex flex-col">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="display-title text-3xl text-white not-italic font-black tracking-tight">Song Library</h2>
+            <h2 className="display-title text-3xl text-white font-black tracking-tighter">Song Library</h2>
             <div className="flex gap-1 glass p-1 rounded-xl bg-white/[0.05] border border-white/10">
               <button onClick={() => setViewMode("list")} className={`h-8 w-9 flex items-center justify-center rounded-lg transition-all ${viewMode === "list" ? "bg-white text-black shadow-lg" : "text-white/60 hover:text-white"}`}><List size={16} /></button>
               <button onClick={() => setViewMode("art")} className={`h-8 w-9 flex items-center justify-center rounded-lg transition-all ${viewMode === "art" ? "bg-white text-black shadow-lg" : "text-white/40 hover:text-white"}`}><LayoutGrid size={16} /></button>
@@ -598,7 +600,7 @@ function PlannerContent() {
               <button onClick={() => setIsLinkModalOpen(false)} className="absolute top-8 right-8 text-white/60 hover:text-white transition-all"><X size={24} /></button>
               <div className="flex items-center gap-4 mb-10 pb-6 border-b border-white/10">
                 <div className="h-12 w-12 rounded-xl bg-violet-600/20 flex items-center justify-center text-violet-400"><Calendar size={24} /></div>
-                <h2 className="display-title text-3xl text-white not-italic font-black">Link Tour Date</h2>
+                <h2 className="display-title text-3xl text-white font-black">Link Tour Date</h2>
               </div>
               <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 scrollbar-thin">
                  {shows.map((show) => (
@@ -606,7 +608,7 @@ function PlannerContent() {
                      <div className="flex items-center gap-5">
                         <div className="text-center min-w-[40px]"><p className="text-[9px] font-black uppercase text-white/80">{new Date(show.date).toLocaleDateString(undefined, { month: 'short' })}</p><p className="text-xl font-black text-white leading-none">{new Date(show.date).getDate()}</p></div>
                         <div className="w-[1px] h-8 bg-white/10" />
-                        <div><h4 className="font-bold text-white group-hover:text-violet-400 transition-colors leading-none mb-1.5 not-italic">{show.venue}</h4><p className="text-[10px] font-black uppercase tracking-widest text-white/60">{show.city}, {show.state}</p></div>
+                        <div><h4 className="font-bold text-white group-hover:text-violet-400 transition-colors leading-none mb-1.5">{show.venue}</h4><p className="text-[10px] font-black uppercase tracking-widest text-white/60">{show.city}, {show.state}</p></div>
                      </div>
                      <ChevronRight size={18} className="text-white/20 group-hover:text-violet-400 transition-all" />
                    </button>
@@ -623,7 +625,7 @@ function PlannerContent() {
               <button type="button" onClick={() => setIsEditShowModalOpen(false)} className="absolute top-8 right-8 text-white/60 hover:text-white transition-all"><X size={24} /></button>
               <div className="flex items-center gap-4 mb-10 pb-6 border-b border-white/10">
                 <div className="h-12 w-12 rounded-xl bg-violet-600/20 flex items-center justify-center text-violet-400"><Calendar size={24} /></div>
-                <h2 className="display-title text-3xl text-white not-italic font-black">Edit Tour Date</h2>
+                <h2 className="display-title text-3xl text-white font-black">Edit Tour Date</h2>
               </div>
               <div className="grid grid-cols-2 gap-6">
                  <div className="col-span-2">
@@ -761,7 +763,7 @@ function SetlistRow({
            <div className="w-[1px] h-6 bg-white/5" />
            <div className="flex flex-col items-center">
               <span className="text-[8px] font-black uppercase tracking-widest text-white/30 mb-0.5">Key</span>
-              <span className="text-[11px] font-black text-violet-400 italic">{song?.defaultKey}</span>
+              <span className="text-[11px] font-black text-violet-400">{song?.defaultKey}</span>
            </div>
            {song?.capo && song.capo > 0 && (
              <>
@@ -797,7 +799,7 @@ function SetlistRow({
       {mode === "rehearsal" && (
         <div className="px-14 flex items-start gap-3">
            <MessageSquare size={14} className="text-white/20 mt-3" />
-           <textarea value={entry.rehearsalNotes || ""} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onUpdate({ rehearsalNotes: e.target.value })} placeholder="Arrangement notes, fixes, or feedback..." className="w-full bg-white/[0.02] border border-white/5 rounded-2xl p-4 text-xs text-white/80 outline-none focus:border-violet-500/30 transition-all min-h-[60px] italic placeholder:text-white/20" />
+           <textarea value={entry.rehearsalNotes || ""} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onUpdate({ rehearsalNotes: e.target.value })} placeholder="Arrangement notes, fixes, or feedback..." className="w-full bg-white/[0.02] border border-white/5 rounded-2xl p-4 text-xs text-white/80 outline-none focus:border-violet-500/30 transition-all min-h-[60px] placeholder:text-white/20" />
         </div>
       )}
     </div>
@@ -824,7 +826,7 @@ function LibraryItem({ song, onClick }: { song: Song, onClick: () => void }) {
             </div>
             <div className="flex flex-col items-end">
                <span className="text-[7px] font-black uppercase tracking-widest text-white/20">Key</span>
-               <span className="text-[10px] font-black text-violet-400 italic">{song.defaultKey}</span>
+               <span className="text-[10px] font-black text-violet-400">{song.defaultKey}</span>
             </div>
          </div>
          <Plus size={14} className="text-violet-400 opacity-0 group-hover:opacity-100 transition-opacity ml-2" />
@@ -845,7 +847,7 @@ function LibraryArtCard({ song, onClick }: { song: Song, onClick: () => void }) 
                 {song.tempo && <span>{song.tempo} BPM</span>}
                 <span>{song.durationEstimate} MIN</span>
              </div>
-             <div className="glass px-2 py-0.5 rounded text-[9px] font-black text-violet-400 italic bg-black/20">{song.defaultKey}</div>
+             <div className="glass px-2 py-0.5 rounded text-[9px] font-black text-violet-400 bg-black/20">{song.defaultKey}</div>
           </div>
       </div>
       <div className="p-4 bg-white/[0.04]"><h4 className="font-bold text-white text-sm truncate group-hover:text-violet-400 transition-colors leading-none mb-1">{song.title}</h4><p className="text-[9px] font-black uppercase tracking-widest text-white/40 truncate">{song.artist}</p></div>

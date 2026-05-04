@@ -29,7 +29,6 @@
 @utility display-title {
   font-family: var(--font-serif);
   font-weight: 900;
-  font-style: italic;
   letter-spacing: -0.02em;
 }
 
@@ -52,7 +51,6 @@
   border-color: rgba(124, 58, 237, 0.3);
   color: var(--color-accent-primary);
   font-weight: 900;
-  font-style: italic;
 }
 
 @utility tap-target {
@@ -73,13 +71,23 @@
 @utility orb {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(120px);
+  filter: blur(40px);
   pointer-events: none;
-  opacity: 0.2;
+  opacity: 0.08;
+}
+
+@utility animate-slow-pulse {
+  animation: slow-pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes slow-pulse {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.15; }
 }
 
 @utility orb-purple { background-color: var(--color-accent-primary); }
 @utility orb-amber { background-color: var(--color-accent-secondary); }
+@utility orb-emerald { background-color: #10b981; }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {

@@ -197,7 +197,7 @@ function StageContent() {
         <div className="flex items-center gap-4">
            <div className="flex flex-col items-center px-8 border-r border-white/10">
               <span className="text-[8px] font-black uppercase tracking-widest text-white/30 mb-1">Key</span>
-              <span className="text-3xl font-black text-violet-400 italic leading-none">{song.defaultKey}</span>
+              <span className="text-3xl font-black text-violet-400 leading-none">{song.defaultKey}</span>
            </div>
            {song.capo > 0 && (
              <div className="flex flex-col items-center px-8 border-r border-white/10">
@@ -348,7 +348,7 @@ function StageContent() {
            <div className="flex-1 bg-black/60 backdrop-blur-sm" onClick={() => setIsDrawerOpen(false)} />
            <div className="w-[450px] bg-obsidian-950 border-l border-white/10 p-12 flex flex-col animate-in slide-in-from-right duration-500 shadow-2xl">
               <div className="flex items-center justify-between mb-12">
-                 <h2 className="display-title text-4xl text-white not-italic font-black tracking-tight">Setlist</h2>
+                 <h2 className="display-title text-4xl text-white font-black tracking-tight">Setlist</h2>
                  <button onClick={() => setIsDrawerOpen(false)} className="h-12 w-12 rounded-xl glass border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-all hover:bg-white/10"><X size={24} /></button>
               </div>
               
@@ -369,7 +369,7 @@ function StageContent() {
                                    <Clock size={8} /> {formatTime(entry.actualDuration)}
                                 </span>
                              ) : entry.performed && (
-                                <span className="text-[8px] font-black uppercase text-white/20 italic">Done</span>
+                                <span className="text-[8px] font-black uppercase text-white/20">Done</span>
                              )}
                          </div>
                       </div>

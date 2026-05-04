@@ -77,11 +77,19 @@ export default function TourPage() {
   };
 
   return (
-    <div className="min-h-screen obsidian-bg text-white p-8 pt-32 pb-20">
-      <div className="max-w-7xl mx-auto">
-        <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-          <div className="animate-in slide-in-from-left duration-700">
-            <h1 className="display-title text-6xl md:text-8xl mb-4 italic font-black tracking-tighter">Tour Master</h1>
+    <div className="min-h-screen obsidian-bg text-white p-8 pt-32 pb-20 overflow-hidden relative">
+      {/* Background Orbs */}
+      <div className="orb orb-purple -top-40 -left-40 w-[800px] h-[800px] animate-slow-pulse" />
+      <div className="orb orb-purple -bottom-40 -right-40 w-[600px] h-[600px] animate-slow-pulse" style={{ animationDelay: '2s' }} />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 animate-in fade-in slide-in-from-top duration-1000">
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-[1px] w-8 bg-violet-500/50" />
+              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-violet-400">Logistics Control</p>
+            </div>
+            <h1 className="display-title text-7xl md:text-9xl mb-4 tracking-tighter">Tour Master</h1>
             <p className="text-white/40 text-lg max-w-xl font-medium tracking-tight">Strategy and logistics for the road. Track your revenue, manage venue relations, and plan your next big run.</p>
           </div>
           <div className="flex gap-4 animate-in slide-in-from-right duration-700">
@@ -231,7 +239,7 @@ export default function TourPage() {
               <button type="button" onClick={() => setIsAddModalOpen(false)} className="absolute top-8 right-8 text-white/40 hover:text-white transition-all"><X size={24} /></button>
               <div className="flex items-center gap-4 mb-10 pb-6 border-b border-white/5">
                 <div className="h-12 w-12 rounded-2xl bg-violet-600/20 flex items-center justify-center text-violet-400"><Calendar size={24} /></div>
-                <h2 className="display-title text-3xl text-white font-black italic tracking-tighter">New Tour Date</h2>
+                <h2 className="display-title text-3xl text-white font-black tracking-tighter">New Tour Date</h2>
               </div>
               
               <div className="grid grid-cols-2 gap-6">

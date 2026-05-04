@@ -46,21 +46,21 @@ export const db = {
           title = ${song.title},
           artist = ${song.artist},
           album = ${song.album},
-          song_type = ${song.songType},
-          alternate_titles = ${song.alternateTitles},
-          status = ${song.status},
-          default_key = ${song.defaultKey},
-          capo = ${song.capo},
-          tempo = ${song.tempo},
-          tuning = ${song.tuning},
-          duration_estimate = ${song.durationEstimate},
+          song_type = ${song.songType || 'original'},
+          alternate_titles = ${song.alternateTitles || []},
+          status = ${song.status || 'active'},
+          default_key = ${song.defaultKey || ''},
+          capo = ${song.capo || 0},
+          tempo = ${song.tempo || ''},
+          tuning = ${song.tuning || 'E Standard'},
+          duration_estimate = ${song.durationEstimate || 0},
           artwork_url = ${song.artworkUrl},
-          lyrics = ${song.lyrics},
-          chords = ${song.chords},
-          tabs = ${song.tabs},
-          notes = ${song.notes},
-          tags = ${song.tags},
-          requestable = ${song.requestable},
+          lyrics = ${song.lyrics || ''},
+          chords = ${song.chords || ''},
+          tabs = ${song.tabs || ''},
+          notes = ${song.notes || ''},
+          tags = ${song.tags || []},
+          requestable = ${song.requestable ?? true},
           updated_at = NOW()
         WHERE id = ${id}
       `;
@@ -71,11 +71,11 @@ export const db = {
           default_key, capo, tempo, tuning, duration_estimate, artwork_url, 
           lyrics, chords, tabs, notes, tags, requestable
         ) VALUES (
-          ${id}, ${song.title}, ${song.artist}, ${song.album}, ${song.songType}, 
-          ${song.alternateTitles || []}, ${song.status}, ${song.defaultKey}, ${song.capo || 0}, 
-          ${song.tempo}, ${song.tuning}, ${song.durationEstimate || 0}, ${song.artworkUrl}, 
+          ${id}, ${song.title || ''}, ${song.artist || ''}, ${song.album || ''}, ${song.songType || 'original'}, 
+          ${song.alternateTitles || []}, ${song.status || 'active'}, ${song.defaultKey || ''}, ${song.capo || 0}, 
+          ${song.tempo || ''}, ${song.tuning || 'E Standard'}, ${song.durationEstimate || 0}, ${song.artworkUrl || ''}, 
           ${song.lyrics || ''}, ${song.chords || ''}, ${song.tabs || ''}, ${song.notes || ''}, ${song.tags || []}, 
-          ${song.requestable || true}
+          ${song.requestable ?? true}
         )
       `;
     }
@@ -209,7 +209,7 @@ export const db = {
         ) VALUES (
           ${id}, ${show.date}, ${show.venue}, ${show.location}, ${show.address || ''}, 
           ${show.city}, ${show.state}, ${show.contactName || ''}, ${show.contactPhone || ''}, 
-          ${show.contactEmail || ''}, ${show.rate || 0}, ${show.status}, ${show.notes || ''}
+          ${show.contactEmail || ''}, ${show.rate || 0}, ${show.status || 'upcoming'}, ${show.notes || ''}
         )
       `;
     }
