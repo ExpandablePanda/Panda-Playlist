@@ -16,7 +16,11 @@
     "react-dom": "19.0.0",
     "lucide-react": "^0.477.0",
     "qrcode": "^1.5.4",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@neondatabase/serverless": "^0.10.4",
+    "@neondatabase/auth": "^0.1.1",
+    "@neondatabase/neon-js": "^0.1.0",
+    "@better-auth/client": "^1.1.21"
   },
   "devDependencies": {
     "typescript": "^5",

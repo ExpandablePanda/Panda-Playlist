@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Song, Show, SetlistEntry } from "@/lib/types";
-import { clientDb } from "@/lib/clientDb";
+import { getSongsAction, getShowsAction, getShowAction } from "@/lib/actions";
 
 export default function AnalyticsPage() {
   const [songs, setSongs] = useState<Song[]>([]);
@@ -17,20 +17,23 @@ export default function AnalyticsPage() {
   const [entries, setEntries] = useState<SetlistEntry[]>([]);
 
   useEffect(() => {
-    const songsData = clientDb.getSongs();
-    const showsData = clientDb.getShows();
-    const allEntries: SetlistEntry[] = [];
-    
-    showsData.forEach(show => {
-      const showData = clientDb.getShow(show.id);
-      if (showData?.entries) {
-        allEntries.push(...showData.entries as SetlistEntry[]);
-      }
-    });
+    const loadData = async () => {
+      const songsData = await getSongsAction();
+      const showsData = await getShowsAction();
+      const allEntries: SetlistEntry[] = [];
+      
+      await Promise.all(showsData.map(async (show) => {
+        const showData = await getShowAction(show.id);
+        if (showData?.entries) {
+          allEntries.push(...showData.entries as SetlistEntry[]);
+        }
+      }));
 
-    setSongs(songsData);
-    setShows(showsData);
-    setEntries(allEntries);
+      setSongs(songsData);
+      setShows(showsData);
+      setEntries(allEntries);
+    };
+    loadData();
   }, []);
 
   const stats = useMemo(() => {

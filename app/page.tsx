@@ -9,7 +9,37 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Show, Song } from "@/lib/types";
-import { clientDb } from "@/lib/clientDb";
+import { getShowsAction, getSongsAction, saveShowAction } from "@/lib/actions";
+import { authClient } from "@/lib/auth/client";
+
+function AuthButton() {
+  const { data: session, isPending } = authClient.useSession();
+
+  if (isPending) return <div className="h-10 w-24 glass rounded-xl animate-pulse" />;
+
+  if (session) {
+    return (
+      <button 
+        onClick={() => authClient.signOut()}
+        className="flex items-center gap-3 glass px-4 h-10 rounded-xl border border-white/10 hover:bg-rose-500/10 hover:border-rose-500/30 transition-all group"
+      >
+        <div className="h-6 w-6 rounded-full bg-violet-600 flex items-center justify-center text-[10px] font-black text-white">
+          {session.user.name?.charAt(0) || "U"}
+        </div>
+        <span className="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-rose-400">Logout</span>
+      </button>
+    );
+  }
+
+  return (
+    <button 
+      onClick={() => authClient.signIn.social({ provider: "github" })}
+      className="h-10 px-6 rounded-xl bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest hover:bg-violet-500 transition-all shadow-[0_0_20px_rgba(124,58,237,0.3)] flex items-center gap-2"
+    >
+      <User size={14} /> Login
+    </button>
+  );
+}
 
 export default function HomeDashboard() {
   const [shows, setShows] = useState<Show[]>([]);
@@ -21,9 +51,13 @@ export default function HomeDashboard() {
     fetchData();
   }, []);
 
-  const fetchData = () => {
-    setShows(clientDb.getShows());
-    setSongs(clientDb.getSongs());
+  const fetchData = async () => {
+    const [fetchedShows, fetchedSongs] = await Promise.all([
+      getShowsAction(),
+      getSongsAction()
+    ]);
+    setShows(fetchedShows);
+    setSongs(fetchedSongs);
   };
 
   const handleSaveShow = (e: React.FormEvent) => {
@@ -31,11 +65,11 @@ export default function HomeDashboard() {
     if (!editingShow) return;
 
     const location = `${editingShow.city || ""}, ${editingShow.state || ""}`;
-    clientDb.saveShow({ ...editingShow, location } as Show);
-
-    fetchData();
-    setIsModalOpen(false);
-    setEditingShow(null);
+    saveShowAction({ ...editingShow, location } as Show).then(() => {
+      fetchData();
+      setIsModalOpen(false);
+      setEditingShow(null);
+    });
   };
 
   const upcomingShows = useMemo(() => {
@@ -67,6 +101,7 @@ export default function HomeDashboard() {
         <nav className="flex items-center gap-10">
            <Link href="/planner" className="text-[11px] font-black uppercase tracking-[0.2em] text-white/80 hover:text-white transition-all">Setlist Planner</Link>
            <Link href="/library" className="text-[11px] font-black uppercase tracking-[0.2em] text-white/80 hover:text-white transition-all">Master Catalog</Link>
+           <AuthButton />
            <div className="h-10 w-10 rounded-xl glass flex items-center justify-center hover:bg-white/10 transition-all cursor-pointer border border-white/5">
               <Settings size={18} className="text-white/60" />
            </div>

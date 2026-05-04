@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Show } from "@/lib/types";
-import { clientDb } from "@/lib/clientDb";
+import { getShowsAction, saveShowAction, deleteShowAction } from "@/lib/actions";
 
 export default function TourPage() {
   const [shows, setShows] = useState<Show[]>([]);
@@ -24,8 +24,9 @@ export default function TourPage() {
     status: "upcoming"
   });
 
-  const fetchData = () => {
-    setShows(clientDb.getShows());
+  const fetchData = async () => {
+    const fetchedShows = await getShowsAction();
+    setShows(fetchedShows);
   };
 
   useEffect(() => {
@@ -54,23 +55,25 @@ export default function TourPage() {
 
   const handleAddShow = (e: React.FormEvent) => {
     e.preventDefault();
-    clientDb.saveShow(newShow);
-    fetchData();
-    setIsAddModalOpen(false);
-    setNewShow({
-      venue: "",
-      date: new Date().toISOString().split('T')[0],
-      city: "",
-      state: "",
-      rate: 0,
-      status: "upcoming"
+    saveShowAction(newShow as Show).then(() => {
+      fetchData();
+      setIsAddModalOpen(false);
+      setNewShow({
+        venue: "",
+        date: new Date().toISOString().split('T')[0],
+        city: "",
+        state: "",
+        rate: 0,
+        status: "upcoming"
+      });
     });
   };
 
   const deleteShow = (id: string) => {
     if (!confirm("Are you sure you want to delete this show?")) return;
-    clientDb.deleteShow(id);
-    fetchData();
+    deleteShowAction(id).then(() => {
+      fetchData();
+    });
   };
 
   return (

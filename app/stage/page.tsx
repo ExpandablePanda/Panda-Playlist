@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Song, SetlistEntry, Show } from "@/lib/types";
-import { clientDb } from "@/lib/clientDb";
+import { getShowAction, saveSetlistAction } from "@/lib/actions";
 
 function StageContent() {
   const searchParams = useSearchParams();
@@ -35,13 +35,16 @@ function StageContent() {
   const scrollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (showId) {
-      const data = clientDb.getShow(showId);
-      if (data) {
-        setShow(data.show);
-        setSetlist(data.entries || []);
+    const fetchData = async () => {
+      if (showId) {
+        const data = await getShowAction(showId);
+        if (data) {
+          setShow(data.show);
+          setSetlist(data.entries || []);
+        }
       }
-    }
+    };
+    fetchData();
   }, [showId]);
 
   // Handle Song Timer
@@ -106,7 +109,7 @@ function StageContent() {
     setIsTiming(true);
   };
 
-  const submitDuration = () => {
+  const submitDuration = async () => {
     if (!showId || !currentEntry) return;
     setIsSavingDuration(true);
     
@@ -114,10 +117,10 @@ function StageContent() {
       idx === currentIndex ? { ...e, actualDuration: songSeconds, performed: true } : e
     );
 
-    clientDb.saveSetlist(showId, updatedEntries);
+    await saveSetlistAction(showId, updatedEntries);
     setSetlist(updatedEntries);
     setIsTiming(false);
-    setTimeout(() => setIsSavingDuration(false), 800);
+    setIsSavingDuration(false);
   };
 
   const formatTime = (totalSeconds: number) => {

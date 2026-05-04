@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Song } from "@/lib/types";
-import { clientDb } from "@/lib/clientDb";
+import { getSongsAction, saveSongAction, deleteSongAction } from "@/lib/actions";
 
 export default function CatalogPage() {
   const [songs, setSongs] = useState<Song[]>([]);
@@ -82,8 +82,9 @@ export default function CatalogPage() {
     }
   };
 
-  const fetchData = () => {
-    setSongs(clientDb.getSongs());
+  const fetchData = async () => {
+    const fetchedSongs = await getSongsAction();
+    setSongs(fetchedSongs);
   };
 
   useEffect(() => {
@@ -205,17 +206,19 @@ export default function CatalogPage() {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingSong) return;
-    clientDb.saveSong({ ...editingSong, songType: editingSong.songType || "original" } as Song);
-    fetchData();
-    setEditingSong(null);
-    setArtworkSource(null);
+    saveSongAction({ ...editingSong, songType: editingSong.songType || "original" } as Song).then(() => {
+      fetchData();
+      setEditingSong(null);
+      setArtworkSource(null);
+    });
   };
 
   const handleDelete = (id: string) => {
     if (!confirm("Are you sure you want to delete this song?")) return;
-    clientDb.deleteSong(id);
-    setSongs(songs.filter(s => s.id !== id));
-    if (editingSong?.id === id) setEditingSong(null);
+    deleteSongAction(id).then(() => {
+      setSongs(songs.filter(s => s.id !== id));
+      if (editingSong?.id === id) setEditingSong(null);
+    });
   };
 
   const isPdf = editingSong?.tabs?.startsWith("data:application/pdf") || editingSong?.tabs?.endsWith(".pdf");

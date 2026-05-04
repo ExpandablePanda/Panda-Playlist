@@ -12,7 +12,14 @@ import {
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Song, SetlistEntry, Show } from "@/lib/types";
-import { clientDb } from "@/lib/clientDb";
+import { 
+  getSongsAction, 
+  getShowsAction, 
+  getShowAction, 
+  saveShowAction, 
+  saveSongAction, 
+  saveSetlistAction 
+} from "@/lib/actions";
 
 function PlannerContent() {
   const searchParams = useSearchParams();
@@ -45,9 +52,13 @@ function PlannerContent() {
 
   const pdfInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchData = () => {
-    setLibrary(clientDb.getSongs());
-    setShows(clientDb.getShows().filter((s: Show) => s.status === "upcoming"));
+  const fetchData = async () => {
+    const [fetchedSongs, fetchedUpcomingShows] = await Promise.all([
+      getSongsAction(),
+      getShowsAction().then(shows => shows.filter(s => s.status === "upcoming"))
+    ]);
+    setLibrary(fetchedSongs);
+    setShows(fetchedUpcomingShows);
   };
 
   useEffect(() => {
@@ -59,10 +70,10 @@ function PlannerContent() {
     if (e) e.preventDefault();
     if (!editingSong || !editingSong.id) return;
     
-    const updatedSong = clientDb.saveSong({ ...editingSong, songType: editingSong.songType || "original" } as Song);
-    setLibrary(prev => prev.map(s => s.id === updatedSong.id ? updatedSong : s));
-    setSetlist(prev => prev.map(entry => entry.songId === updatedSong.id ? { ...entry, song: updatedSong } : entry));
-    setIsEditingSongModalOpen(false);
+    saveSongAction({ ...editingSong, songType: editingSong.songType || "original" } as Song).then(() => {
+      fetchData();
+      setIsEditingSongModalOpen(false);
+    });
   };
 
   const convertPdfToImage = async () => {
@@ -124,9 +135,9 @@ function PlannerContent() {
     }
   };
 
-  const refreshShowData = () => {
+  const refreshShowData = async () => {
     if (showId) {
-      const data = clientDb.getShow(showId);
+      const data = await getShowAction(showId);
       if (data && data.show) {
         setCurrentShow(data.show);
         setEditingShow(data.show);
@@ -211,12 +222,12 @@ function PlannerContent() {
   };
   const onDragEnd = () => setDraggedIndex(null);
 
-  const saveSetlistChanges = () => {
+  const saveSetlistChanges = async () => {
     if (!showId) return;
     setIsSaving(true);
-    clientDb.saveSetlist(showId, setlist);
+    await saveSetlistAction(showId, setlist);
     setHasUnsavedChanges(false);
-    setTimeout(() => setIsSaving(false), 500);
+    setIsSaving(false);
   };
 
   const handleSaveShow = (e: React.FormEvent) => {
@@ -224,9 +235,10 @@ function PlannerContent() {
     if (!editingShow || !showId) return;
 
     const location = `${editingShow.city || ""}, ${editingShow.state || ""}`;
-    clientDb.saveShow({ ...editingShow, location } as Show);
-    refreshShowData();
-    setIsEditShowModalOpen(false);
+    saveShowAction({ ...editingShow, location } as Show).then(() => {
+      refreshShowData();
+      setIsEditShowModalOpen(false);
+    });
   };
 
   const totalTime = Math.round(setlist.reduce((acc, curr) => acc + (curr.song?.durationEstimate || 0), 0));
