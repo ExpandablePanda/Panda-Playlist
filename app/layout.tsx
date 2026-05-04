@@ -31,6 +31,8 @@ import {
   Music2, Layout, Calendar, BarChart3, 
   Terminal, User, Zap, Radio
 } from "lucide-react";
+import { NeonAuthUIProvider } from "@neondatabase/auth/next";
+import { authClient } from "@/lib/auth/client";
 
 function NavPill() {
   return (
@@ -64,16 +66,13 @@ function NavPill() {
   );
 }
 
-import { NeonAuthUIProvider } from "@neondatabase/auth/react/ui";
-import { authClient } from "@/lib/auth/client";
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
+    <html lang="en" className={`${sans.variable} ${serif.variable}`} suppressHydrationWarning>
       <body className="font-sans">
         <NeonAuthUIProvider authClient={authClient}>
           {children}
