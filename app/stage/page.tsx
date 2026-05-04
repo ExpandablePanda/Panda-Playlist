@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Song, SetlistEntry, Show } from "@/lib/types";
+import { clientDb } from "@/lib/clientDb";
 
 function StageContent() {
   const searchParams = useSearchParams();
@@ -20,7 +21,7 @@ function StageContent() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"prompter" | "chart">("prompter");
-  
+
   // SONG TIMER STATE
   const [songSeconds, setSongSeconds] = useState(0);
   const [isTiming, setIsTiming] = useState(false);
@@ -35,12 +36,11 @@ function StageContent() {
 
   useEffect(() => {
     if (showId) {
-      fetch(`/api/shows/${showId}/setlist`)
-        .then(res => res.json())
-        .then(data => {
-          setShow(data.show);
-          setSetlist(data.entries || []);
-        });
+      const data = clientDb.getShow(showId);
+      if (data) {
+        setShow(data.show);
+        setSetlist(data.entries || []);
+      }
     }
   }, [showId]);
 
@@ -106,7 +106,7 @@ function StageContent() {
     setIsTiming(true);
   };
 
-  const submitDuration = async () => {
+  const submitDuration = () => {
     if (!showId || !currentEntry) return;
     setIsSavingDuration(true);
     
@@ -114,17 +114,10 @@ function StageContent() {
       idx === currentIndex ? { ...e, actualDuration: songSeconds, performed: true } : e
     );
 
-    const res = await fetch(`/api/shows/${showId}/setlist`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ entries: updatedEntries }),
-    });
-
-    if (res.ok) {
-      setSetlist(updatedEntries);
-      setIsTiming(false);
-      setTimeout(() => setIsSavingDuration(false), 800);
-    }
+    clientDb.saveSetlist(showId, updatedEntries);
+    setSetlist(updatedEntries);
+    setIsTiming(false);
+    setTimeout(() => setIsSavingDuration(false), 800);
   };
 
   const formatTime = (totalSeconds: number) => {

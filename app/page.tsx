@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Show, Song } from "@/lib/types";
+import { clientDb } from "@/lib/clientDb";
 
 export default function HomeDashboard() {
   const [shows, setShows] = useState<Show[]>([]);
@@ -20,34 +21,21 @@ export default function HomeDashboard() {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
-    const [showsRes, songsRes] = await Promise.all([
-      fetch("/api/shows"),
-      fetch("/api/songs")
-    ]);
-    const showsData = await showsRes.json();
-    const songsData = await songsRes.json();
-    setShows(showsData);
-    setSongs(songsData);
+  const fetchData = () => {
+    setShows(clientDb.getShows());
+    setSongs(clientDb.getSongs());
   };
 
-  const handleSaveShow = async (e: React.FormEvent) => {
+  const handleSaveShow = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingShow) return;
 
     const location = `${editingShow.city || ""}, ${editingShow.state || ""}`;
-    
-    const res = await fetch("/api/shows", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...editingShow, location }),
-    });
+    clientDb.saveShow({ ...editingShow, location } as Show);
 
-    if (res.ok) {
-      await fetchData();
-      setIsModalOpen(false);
-      setEditingShow(null);
-    }
+    fetchData();
+    setIsModalOpen(false);
+    setEditingShow(null);
   };
 
   const upcomingShows = useMemo(() => {

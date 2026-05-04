@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Song } from "@/lib/types";
+import { clientDb } from "@/lib/clientDb";
 
 export default function CatalogPage() {
   const [songs, setSongs] = useState<Song[]>([]);
@@ -81,8 +82,12 @@ export default function CatalogPage() {
     }
   };
 
+  const fetchData = () => {
+    setSongs(clientDb.getSongs());
+  };
+
   useEffect(() => {
-    fetch("/api/songs").then(res => res.json()).then(data => setSongs(data));
+    fetchData();
   }, []);
 
   const uniqueArtists = useMemo(() => {
@@ -197,29 +202,20 @@ export default function CatalogPage() {
   const originals = filteredSongs.filter(s => s.songType === "original");
   const covers = filteredSongs.filter(s => s.songType === "cover");
 
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingSong) return;
-    const res = await fetch("/api/songs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...editingSong, songType: editingSong.songType || "original" }),
-    });
-    if (res.ok) {
-      const updatedSongs = await fetch("/api/songs").then(r => r.json());
-      setSongs(updatedSongs);
-      setEditingSong(null);
-      setArtworkSource(null);
-    }
+    clientDb.saveSong({ ...editingSong, songType: editingSong.songType || "original" } as Song);
+    fetchData();
+    setEditingSong(null);
+    setArtworkSource(null);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     if (!confirm("Are you sure you want to delete this song?")) return;
-    const res = await fetch(`/api/songs/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setSongs(songs.filter(s => s.id !== id));
-      if (editingSong?.id === id) setEditingSong(null);
-    }
+    clientDb.deleteSong(id);
+    setSongs(songs.filter(s => s.id !== id));
+    if (editingSong?.id === id) setEditingSong(null);
   };
 
   const isPdf = editingSong?.tabs?.startsWith("data:application/pdf") || editingSong?.tabs?.endsWith(".pdf");

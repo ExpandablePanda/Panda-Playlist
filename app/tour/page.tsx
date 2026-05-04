@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Show } from "@/lib/types";
+import { clientDb } from "@/lib/clientDb";
 
 export default function TourPage() {
   const [shows, setShows] = useState<Show[]>([]);
@@ -23,8 +24,12 @@ export default function TourPage() {
     status: "upcoming"
   });
 
+  const fetchData = () => {
+    setShows(clientDb.getShows());
+  };
+
   useEffect(() => {
-    fetch("/api/shows").then(res => res.json()).then(data => setShows(data));
+    fetchData();
   }, []);
 
   const stats = useMemo(() => {
@@ -47,34 +52,25 @@ export default function TourPage() {
     s.state.toLowerCase().includes(searchQuery.toLowerCase())
   ).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-  const handleAddShow = async (e: React.FormEvent) => {
+  const handleAddShow = (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/shows", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newShow)
+    clientDb.saveShow(newShow);
+    fetchData();
+    setIsAddModalOpen(false);
+    setNewShow({
+      venue: "",
+      date: new Date().toISOString().split('T')[0],
+      city: "",
+      state: "",
+      rate: 0,
+      status: "upcoming"
     });
-    if (res.ok) {
-      const data = await res.json();
-      setShows([...shows, data]);
-      setIsAddModalOpen(false);
-      setNewShow({
-        venue: "",
-        date: new Date().toISOString().split('T')[0],
-        city: "",
-        state: "",
-        rate: 0,
-        status: "upcoming"
-      });
-    }
   };
 
-  const deleteShow = async (id: string) => {
+  const deleteShow = (id: string) => {
     if (!confirm("Are you sure you want to delete this show?")) return;
-    const res = await fetch(`/api/shows/${id}`, { method: "DELETE" });
-    if (res.ok) {
-      setShows(shows.filter(s => s.id !== id));
-    }
+    clientDb.deleteShow(id);
+    fetchData();
   };
 
   return (

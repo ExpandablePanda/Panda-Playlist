@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Song, SetlistEntry, Show } from "@/lib/types";
+import { clientDb } from "@/lib/clientDb";
 
 function PlannerContent() {
   const searchParams = useSearchParams();
@@ -44,35 +45,24 @@ function PlannerContent() {
 
   const pdfInputRef = useRef<HTMLInputElement>(null);
 
+  const fetchData = () => {
+    setLibrary(clientDb.getSongs());
+    setShows(clientDb.getShows().filter((s: Show) => s.status === "upcoming"));
+  };
+
   useEffect(() => {
-    fetch("/api/songs").then(res => res.json()).then(data => setLibrary(data));
-    fetch("/api/shows").then(res => res.json()).then(data => setShows(data.filter((s: Show) => s.status === "upcoming")));
-    
+    fetchData();
     refreshShowData();
   }, [showId]);
 
-  const handleUpdateSong = async (e?: React.FormEvent) => {
+  const handleUpdateSong = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!editingSong || !editingSong.id) return;
     
-    console.log("Updating song:", editingSong);
-    const res = await fetch(`/api/songs/${editingSong.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...editingSong, songType: editingSong.songType || "original" })
-    });
-    
-    if (res.ok) {
-      const updatedSong = await res.json();
-      console.log("Update success:", updatedSong);
-      setLibrary(prev => prev.map(s => s.id === updatedSong.id ? updatedSong : s));
-      setSetlist(prev => prev.map(entry => entry.songId === updatedSong.id ? { ...entry, song: updatedSong } : entry));
-      setIsEditingSongModalOpen(false);
-      alert("Song updated successfully!");
-    } else {
-      console.error("Update failed:", await res.text());
-      alert("Failed to save changes. Please try again.");
-    }
+    const updatedSong = clientDb.saveSong({ ...editingSong, songType: editingSong.songType || "original" } as Song);
+    setLibrary(prev => prev.map(s => s.id === updatedSong.id ? updatedSong : s));
+    setSetlist(prev => prev.map(entry => entry.songId === updatedSong.id ? { ...entry, song: updatedSong } : entry));
+    setIsEditingSongModalOpen(false);
   };
 
   const convertPdfToImage = async () => {
@@ -136,15 +126,12 @@ function PlannerContent() {
 
   const refreshShowData = () => {
     if (showId) {
-      fetch(`/api/shows/${showId}/setlist`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.show) {
-            setCurrentShow(data.show);
-            setEditingShow(data.show);
-            setSetlist(data.entries || []);
-          }
-        });
+      const data = clientDb.getShow(showId);
+      if (data && data.show) {
+        setCurrentShow(data.show);
+        setEditingShow(data.show);
+        setSetlist(data.entries || []);
+      }
     } else {
       setCurrentShow(null);
       setSetlist([]);
@@ -224,36 +211,22 @@ function PlannerContent() {
   };
   const onDragEnd = () => setDraggedIndex(null);
 
-  const saveSetlistChanges = async () => {
+  const saveSetlistChanges = () => {
     if (!showId) return;
     setIsSaving(true);
-    const res = await fetch(`/api/shows/${showId}/setlist`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ entries: setlist }),
-    });
-    if (res.ok) {
-      setHasUnsavedChanges(false);
-      setTimeout(() => setIsSaving(false), 500);
-    }
+    clientDb.saveSetlist(showId, setlist);
+    setHasUnsavedChanges(false);
+    setTimeout(() => setIsSaving(false), 500);
   };
 
-  const handleSaveShow = async (e: React.FormEvent) => {
+  const handleSaveShow = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingShow || !showId) return;
 
     const location = `${editingShow.city || ""}, ${editingShow.state || ""}`;
-    
-    const res = await fetch("/api/shows", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...editingShow, location }),
-    });
-
-    if (res.ok) {
-      refreshShowData();
-      setIsEditShowModalOpen(false);
-    }
+    clientDb.saveShow({ ...editingShow, location } as Show);
+    refreshShowData();
+    setIsEditShowModalOpen(false);
   };
 
   const totalTime = Math.round(setlist.reduce((acc, curr) => acc + (curr.song?.durationEstimate || 0), 0));
