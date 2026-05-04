@@ -132,7 +132,7 @@ export const db = {
     };
 
     const entriesResult = await sql`
-      SELECT e.*, s.title, s.artist, s.duration_estimate
+      SELECT e.*, s.*
       FROM setlist_entries e
       JOIN songs s ON e.song_id = s.id
       WHERE e.show_id = ${id}
@@ -156,7 +156,24 @@ export const db = {
           id: e.song_id,
           title: e.title,
           artist: e.artist,
-          durationEstimate: e.duration_estimate
+          album: e.album,
+          songType: e.song_type,
+          alternateTitles: e.alternate_titles,
+          status: e.status,
+          defaultKey: e.default_key,
+          capo: e.capo,
+          tempo: e.tempo,
+          tuning: e.tuning,
+          durationEstimate: e.duration_estimate,
+          artworkUrl: e.artwork_url,
+          lyrics: e.lyrics,
+          chords: e.chords,
+          tabs: e.tabs,
+          notes: e.notes,
+          tags: e.tags,
+          requestable: e.requestable,
+          createdAt: e.created_at,
+          updatedAt: e.updated_at
         }
       })) 
     };
