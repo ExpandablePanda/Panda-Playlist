@@ -246,7 +246,7 @@ export default function CatalogPage() {
         <aside className="lg:col-span-4 flex flex-col min-h-0">
           <div className="relative mb-6 group px-2">
             <Search className="absolute left-7 top-1/2 -translate-y-1/2 text-white/60" size={18} />
-            <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search Catalog..." className="w-full h-14 pl-14 pr-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-sm text-white outline-none focus:border-violet-500/30 transition-all placeholder:text-white/40" />
+            <input value={searchQuery} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)} placeholder="Search Catalog..." className="w-full h-14 pl-14 pr-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-sm text-white outline-none focus:border-violet-500/30 transition-all placeholder:text-white/40" />
           </div>
 
           <div className="flex items-center gap-2 mb-8 px-3">
@@ -465,7 +465,7 @@ function CatalogItem({ song, isActive, onEdit, onDelete }: { song: Song, isActiv
       onClick={onEdit} 
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onEdit(); }}
+      onKeyDown={(e: React.KeyboardEvent) => { if (e.key === 'Enter' || e.key === ' ') onEdit(); }}
       className={`planner-card !p-4 w-full flex items-center justify-between group hover:!bg-white/10 transition-all cursor-pointer bg-white/[0.03] border-white/10 ${isActive ? "!bg-white/10 border-violet-500 shadow-[0_0_20px_rgba(124,58,237,0.2)]" : ""}`}
     >
       <div className="flex items-center gap-4">
@@ -477,7 +477,7 @@ function CatalogItem({ song, isActive, onEdit, onDelete }: { song: Song, isActiv
       <div className="flex items-center gap-4">
          <div className={`px-2 py-0.5 rounded text-[7px] font-black uppercase border ${song.songType === 'original' ? 'bg-violet-600 text-white border-violet-500' : 'bg-amber-600 text-white border-amber-500'}`}>{song.songType}</div>
          <button 
-           onClick={(e) => { e.stopPropagation(); onDelete(); }} 
+           onClick={(e: React.MouseEvent) => { e.stopPropagation(); onDelete(); }} 
            className="opacity-0 group-hover:opacity-100 p-2 text-white/40 hover:text-rose-400 transition-all"
            aria-label="Delete song"
          >

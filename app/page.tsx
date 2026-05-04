@@ -175,7 +175,7 @@ export default function HomeDashboard() {
                     <input 
                       required
                       value={editingShow.venue || ""}
-                      onChange={e => setEditingShow({...editingShow, venue: e.target.value})}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingShow({...editingShow, venue: e.target.value})}
                       placeholder="e.g. Red Rocks Amphitheatre" 
                       className="w-full h-14 px-6 rounded-xl glass bg-white/[0.08] border-white/20 text-lg font-bold text-white outline-none focus:border-violet-500/50 transition-all placeholder:text-white/40"
                     />
@@ -187,7 +187,7 @@ export default function HomeDashboard() {
                       required
                       type="date"
                       value={editingShow.date || ""}
-                      onChange={e => setEditingShow({...editingShow, date: e.target.value})}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingShow({...editingShow, date: e.target.value})}
                       className="w-full h-12 px-5 rounded-xl glass bg-white/[0.08] border-white/20 text-sm text-white outline-none focus:border-white/30 transition-all"
                     />
                  </div>
@@ -199,7 +199,7 @@ export default function HomeDashboard() {
                        <input 
                         type="number"
                         value={editingShow.rate || 0}
-                        onChange={e => setEditingShow({...editingShow, rate: parseInt(e.target.value) || 0})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingShow({...editingShow, rate: parseInt(e.target.value) || 0})}
                         className="w-full h-12 pl-12 pr-4 rounded-xl glass bg-white/[0.08] border-white/20 text-sm font-black text-emerald-400 outline-none focus:border-emerald-500/50 transition-all"
                       />
                     </div>
@@ -212,7 +212,7 @@ export default function HomeDashboard() {
                           <User className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={14} />
                           <input 
                             value={editingShow.contactName || ""}
-                            onChange={e => setEditingShow({...editingShow, contactName: e.target.value})}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingShow({...editingShow, contactName: e.target.value})}
                             placeholder="John Doe"
                             className="w-full h-12 pl-10 pr-4 rounded-xl glass bg-white/[0.08] border-white/20 text-xs text-white outline-none focus:border-white/30 transition-all"
                           />
@@ -224,7 +224,7 @@ export default function HomeDashboard() {
                           <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={14} />
                           <input 
                             value={editingShow.contactPhone || ""}
-                            onChange={e => setEditingShow({...editingShow, contactPhone: e.target.value})}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingShow({...editingShow, contactPhone: e.target.value})}
                             placeholder="555-0123"
                             className="w-full h-12 pl-10 pr-4 rounded-xl glass bg-white/[0.08] border-white/20 text-xs text-white outline-none focus:border-white/30 transition-all"
                           />
@@ -236,7 +236,7 @@ export default function HomeDashboard() {
                           <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40" size={14} />
                           <input 
                             value={editingShow.contactEmail || ""}
-                            onChange={e => setEditingShow({...editingShow, contactEmail: e.target.value})}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingShow({...editingShow, contactEmail: e.target.value})}
                             placeholder="john@venue.com"
                             className="w-full h-12 pl-10 pr-4 rounded-xl glass bg-white/[0.08] border-white/20 text-xs text-white outline-none focus:border-white/30 transition-all"
                           />
@@ -249,7 +249,7 @@ export default function HomeDashboard() {
                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-3 block">City</label>
                        <input 
                         value={editingShow.city || ""}
-                        onChange={e => setEditingShow({...editingShow, city: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingShow({...editingShow, city: e.target.value})}
                         className="w-full h-12 px-5 rounded-xl glass bg-white/[0.08] border-white/20 text-sm text-white outline-none focus:border-white/30 transition-all"
                       />
                     </div>
@@ -257,7 +257,7 @@ export default function HomeDashboard() {
                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-3 block">State</label>
                        <input 
                         value={editingShow.state || ""}
-                        onChange={e => setEditingShow({...editingShow, state: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingShow({...editingShow, state: e.target.value})}
                         className="w-full h-12 px-5 rounded-xl glass bg-white/[0.08] border-white/20 text-sm text-white outline-none focus:border-white/30 transition-all"
                       />
                     </div>
@@ -265,7 +265,7 @@ export default function HomeDashboard() {
                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-3 block">Street Address</label>
                        <input 
                         value={editingShow.address || ""}
-                        onChange={e => setEditingShow({...editingShow, address: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEditingShow({...editingShow, address: e.target.value})}
                         className="w-full h-12 px-5 rounded-xl glass bg-white/[0.08] border-white/20 text-sm text-white outline-none focus:border-white/30 transition-all placeholder:text-white/20"
                       />
                     </div>

@@ -128,7 +128,7 @@ export default function TourPage() {
                   <input 
                     placeholder="Search venue or city..." 
                     value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                     className="h-10 pl-10 pr-6 rounded-full glass border-white/10 bg-white/[0.02] text-xs font-bold outline-none focus:border-white/20 transition-all w-64"
                   />
                </div>
@@ -234,23 +234,23 @@ export default function TourPage() {
               <div className="grid grid-cols-2 gap-6">
                  <div className="col-span-2">
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-3 block">Venue Name</label>
-                    <input required value={newShow.venue} onChange={e => setNewShow({...newShow, venue: e.target.value})} className="w-full h-14 px-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-xl font-bold text-white outline-none focus:border-violet-500/50 transition-all" />
+                    <input required value={newShow.venue} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewShow({...newShow, venue: e.target.value})} className="w-full h-14 px-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-xl font-bold text-white outline-none focus:border-violet-500/50 transition-all" />
                  </div>
                  <div>
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-3 block">Show Date</label>
-                    <input required type="date" value={newShow.date} onChange={e => setNewShow({...newShow, date: e.target.value})} className="w-full h-14 px-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-sm text-white outline-none" />
+                    <input required type="date" value={newShow.date} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewShow({...newShow, date: e.target.value})} className="w-full h-14 px-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-sm text-white outline-none" />
                  </div>
                  <div>
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-3 block">Performance Rate ($)</label>
-                    <input type="number" value={newShow.rate} onChange={e => setNewShow({...newShow, rate: parseInt(e.target.value) || 0})} className="w-full h-14 px-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-lg font-black text-emerald-400 outline-none" />
+                    <input type="number" value={newShow.rate} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewShow({...newShow, rate: parseInt(e.target.value) || 0})} className="w-full h-14 px-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-lg font-black text-emerald-400 outline-none" />
                  </div>
                  <div>
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-3 block">City</label>
-                    <input required value={newShow.city} onChange={e => setNewShow({...newShow, city: e.target.value})} className="w-full h-12 px-5 rounded-xl glass bg-white/[0.05] border-white/10 text-sm text-white" />
+                    <input required value={newShow.city} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewShow({...newShow, city: e.target.value})} className="w-full h-12 px-5 rounded-xl glass bg-white/[0.05] border-white/10 text-sm text-white" />
                  </div>
                  <div>
                     <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-3 block">State</label>
-                    <input required value={newShow.state} onChange={e => setNewShow({...newShow, state: e.target.value})} className="w-full h-12 px-5 rounded-xl glass bg-white/[0.05] border-white/10 text-sm text-white" />
+                    <input required value={newShow.state} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewShow({...newShow, state: e.target.value})} className="w-full h-12 px-5 rounded-xl glass bg-white/[0.05] border-white/10 text-sm text-white" />
                  </div>
               </div>
 

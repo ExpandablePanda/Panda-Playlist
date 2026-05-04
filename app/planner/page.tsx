@@ -393,7 +393,7 @@ function PlannerContent() {
 
           <div className="relative mb-6 group">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-white/60" size={16} />
-            <input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search repertoire..." className="w-full h-12 pl-14 pr-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-sm text-white outline-none focus:border-violet-500/30 transition-all placeholder:text-white/40" />
+            <input value={searchQuery} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)} placeholder="Search repertoire..." className="w-full h-12 pl-14 pr-6 rounded-2xl glass bg-white/[0.05] border-white/10 text-sm text-white outline-none focus:border-violet-500/30 transition-all placeholder:text-white/40" />
           </div>
 
           <div className="flex items-center gap-2 mb-8 px-1">
@@ -719,7 +719,7 @@ function SetlistRow({
             <h3 className={`text-xl font-bold text-white truncate leading-none mb-1 transition-colors ${isCut ? 'text-rose-400' : 'group-hover:text-violet-400'}`}>{song?.title}</h3>
             <p className="text-[10px] font-black uppercase tracking-widest text-white/80">{song?.artist}</p>
           </div>
-          <button onClick={(e) => { e.stopPropagation(); onEditSong(song); }} className="ml-3 p-2 rounded-lg text-white/20 hover:text-white hover:bg-white/10 transition-all opacity-0 group-hover:opacity-100" title="Quick Edit Song">
+          <button onClick={(e: React.MouseEvent) => { e.stopPropagation(); if (song) onEditSong(song); }} className="ml-3 p-2 rounded-lg text-white/20 hover:text-white hover:bg-white/10 transition-all opacity-0 group-hover:opacity-100" title="Quick Edit Song">
              <Settings size={16} />
           </button>
           {isCut && mode === "show" && (
@@ -765,9 +765,9 @@ function SetlistRow({
         <div className="col-span-3 flex items-center justify-end gap-2 px-4">
            {mode === "rehearsal" ? (
              <div className="flex gap-1.5 w-full">
-                <button onClick={(e) => { e.stopPropagation(); onUpdate({ rehearsalStatus: 'worked' }); }} className={`flex-1 h-8 rounded-lg flex items-center justify-center gap-1 text-[7px] font-black uppercase tracking-widest border transition-all ${entry.rehearsalStatus === 'worked' ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/20' : 'bg-white/[0.02] border-white/5 text-white/40 hover:text-white'}`}><CheckCircle size={10} /> Ok</button>
-                <button onClick={(e) => { e.stopPropagation(); onUpdate({ rehearsalStatus: 'needs-work' }); }} className={`flex-1 h-8 rounded-lg flex items-center justify-center gap-1 text-[7px] font-black uppercase tracking-widest border transition-all ${entry.rehearsalStatus === 'needs-work' ? 'bg-amber-600 text-white border-amber-500 shadow-lg shadow-amber-600/20' : 'bg-white/[0.02] border-white/5 text-white/40 hover:text-white'}`}><Zap size={10} /> Fix</button>
-                <button onClick={(e) => { e.stopPropagation(); onUpdate({ rehearsalStatus: 'scrap' }); }} className={`flex-1 h-8 rounded-lg flex items-center justify-center gap-1 text-[7px] font-black uppercase tracking-widest border transition-all ${entry.rehearsalStatus === 'scrap' ? 'bg-rose-600 text-white border-rose-500 shadow-lg shadow-rose-600/20' : 'bg-white/[0.02] border-white/5 text-white/40 hover:text-white'}`}><XCircle size={10} /> Cut</button>
+                <button onClick={(e: React.MouseEvent) => { e.stopPropagation(); onUpdate({ rehearsalStatus: 'worked' }); }} className={`flex-1 h-8 rounded-lg flex items-center justify-center gap-1 text-[7px] font-black uppercase tracking-widest border transition-all ${entry.rehearsalStatus === 'worked' ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/20' : 'bg-white/[0.02] border-white/5 text-white/40 hover:text-white'}`}><CheckCircle size={10} /> Ok</button>
+                <button onClick={(e: React.MouseEvent) => { e.stopPropagation(); onUpdate({ rehearsalStatus: 'needs-work' }); }} className={`flex-1 h-8 rounded-lg flex items-center justify-center gap-1 text-[7px] font-black uppercase tracking-widest border transition-all ${entry.rehearsalStatus === 'needs-work' ? 'bg-amber-600 text-white border-amber-500 shadow-lg shadow-amber-600/20' : 'bg-white/[0.02] border-white/5 text-white/40 hover:text-white'}`}><Zap size={10} /> Fix</button>
+                <button onClick={(e: React.MouseEvent) => { e.stopPropagation(); onUpdate({ rehearsalStatus: 'scrap' }); }} className={`flex-1 h-8 rounded-lg flex items-center justify-center gap-1 text-[7px] font-black uppercase tracking-widest border transition-all ${entry.rehearsalStatus === 'scrap' ? 'bg-rose-600 text-white border-rose-500 shadow-lg shadow-rose-600/20' : 'bg-white/[0.02] border-white/5 text-white/40 hover:text-white'}`}><XCircle size={10} /> Cut</button>
              </div>
            ) : (
              <div className="flex items-center gap-3">
@@ -785,7 +785,7 @@ function SetlistRow({
       {mode === "rehearsal" && (
         <div className="px-14 flex items-start gap-3">
            <MessageSquare size={14} className="text-white/20 mt-3" />
-           <textarea value={entry.rehearsalNotes || ""} onChange={(e) => onUpdate({ rehearsalNotes: e.target.value })} placeholder="Arrangement notes, fixes, or feedback..." className="w-full bg-white/[0.02] border border-white/5 rounded-2xl p-4 text-xs text-white/80 outline-none focus:border-violet-500/30 transition-all min-h-[60px] italic placeholder:text-white/20" />
+           <textarea value={entry.rehearsalNotes || ""} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onUpdate({ rehearsalNotes: e.target.value })} placeholder="Arrangement notes, fixes, or feedback..." className="w-full bg-white/[0.02] border border-white/5 rounded-2xl p-4 text-xs text-white/80 outline-none focus:border-violet-500/30 transition-all min-h-[60px] italic placeholder:text-white/20" />
         </div>
       )}
     </div>

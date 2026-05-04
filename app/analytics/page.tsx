@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { Song, Show, SetlistEntry } from "@/lib/types";
+import { clientDb } from "@/lib/clientDb";
 
 export default function AnalyticsPage() {
   const [songs, setSongs] = useState<Song[]>([]);
@@ -16,23 +17,20 @@ export default function AnalyticsPage() {
   const [entries, setEntries] = useState<SetlistEntry[]>([]);
 
   useEffect(() => {
-    Promise.all([
-      fetch("/api/songs").then(res => res.json()),
-      fetch("/api/shows").then(res => res.json()),
-      fetch("/api/shows").then(res => res.json()).then(async (shows) => {
-        // Fetch all entries for all shows to get play counts
-        const allEntries: SetlistEntry[] = [];
-        for (const show of shows) {
-          const showData = await fetch(`/api/shows/${show.id}`).then(res => res.json());
-          if (showData.entries) allEntries.push(...showData.entries);
-        }
-        return allEntries;
-      })
-    ]).then(([songsData, showsData, entriesData]) => {
-      setSongs(songsData);
-      setShows(showsData);
-      setEntries(entriesData);
+    const songsData = clientDb.getSongs();
+    const showsData = clientDb.getShows();
+    const allEntries: SetlistEntry[] = [];
+    
+    showsData.forEach(show => {
+      const showData = clientDb.getShow(show.id);
+      if (showData?.entries) {
+        allEntries.push(...showData.entries as SetlistEntry[]);
+      }
     });
+
+    setSongs(songsData);
+    setShows(showsData);
+    setEntries(allEntries);
   }, []);
 
   const stats = useMemo(() => {
