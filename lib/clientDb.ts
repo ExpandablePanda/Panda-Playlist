@@ -11,11 +11,11 @@ interface DBContent {
 
 const INITIAL_DATA: DBContent = {
   songs: [
-    { id: "1", title: "Neon Lights", artist: "The Pandas", durationEstimate: 210, key: "Am", energy: 8, bpm: 124, tags: ["High Energy", "Opener"], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-    { id: "2", title: "Bamboo Groove", artist: "The Pandas", durationEstimate: 185, key: "G", energy: 5, bpm: 105, tags: ["Chill", "Mid-set"], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+    { id: "1", title: "Neon Lights", artist: "The Pandas", album: "", songType: "original", alternateTitles: [], status: "active", defaultKey: "Am", capo: 0, tempo: "124", tuning: "E Standard", durationEstimate: 210, lyrics: "", chords: "", tabs: "", notes: "", tags: ["High Energy", "Opener"], requestable: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+    { id: "2", title: "Bamboo Groove", artist: "The Pandas", album: "", songType: "original", alternateTitles: [], status: "active", defaultKey: "G", capo: 0, tempo: "105", tuning: "E Standard", durationEstimate: 185, lyrics: "", chords: "", tabs: "", notes: "", tags: ["Chill", "Mid-set"], requestable: true, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
   ],
   shows: [
-    { id: "s1", date: new Date().toISOString(), venue: "The Bamboo Lounge", city: "San Francisco", state: "CA", status: "upcoming", rate: 500, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+    { id: "s1", date: new Date().toISOString(), venue: "The Bamboo Lounge", location: "San Francisco, CA", address: "", city: "San Francisco", state: "CA", contactName: "", contactPhone: "", contactEmail: "", rate: 500, status: "upcoming", notes: "", createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
   ],
   setlistEntries: [],
   requests: []
