@@ -33,7 +33,13 @@ function AuthButton() {
 
   return (
     <button 
-      onClick={() => authClient.signIn.social({ provider: "github" })}
+      onClick={async () => {
+        console.log("GitHub Login Clicked");
+        await authClient.signIn.social({ 
+          provider: "github",
+          callbackURL: window.location.origin
+        });
+      }}
       className="h-10 px-6 rounded-xl bg-violet-600 text-white text-[10px] font-black uppercase tracking-widest hover:bg-violet-500 transition-all shadow-[0_0_20px_rgba(124,58,237,0.3)] flex items-center gap-2"
     >
       <User size={14} /> Login
