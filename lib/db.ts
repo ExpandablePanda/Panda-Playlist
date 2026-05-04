@@ -11,7 +11,7 @@ export const db = {
   // Songs
   getSongs: async () => {
     const result = await sql`SELECT * FROM songs ORDER BY created_at DESC`;
-    return result.map(row => ({
+    return result.map((row: any) => ({
       id: row.id,
       title: row.title,
       artist: row.artist,
@@ -89,7 +89,23 @@ export const db = {
   // Shows
   getShows: async () => {
     const result = await sql`SELECT * FROM shows ORDER BY date DESC`;
-    return result as Show[];
+    return result.map((row: any) => ({
+      id: row.id,
+      date: row.date,
+      venue: row.venue,
+      location: row.location,
+      address: row.address,
+      city: row.city,
+      state: row.state,
+      contactName: row.contact_name,
+      contactPhone: row.contact_phone,
+      contactEmail: row.contact_email,
+      rate: row.rate,
+      status: row.status,
+      notes: row.notes,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
+    })) as Show[];
   },
 
   getShow: async (id: string) => {
@@ -125,7 +141,7 @@ export const db = {
     
     return { 
       show, 
-      entries: entriesResult.map(e => ({
+      entries: entriesResult.map((e: any) => ({
         id: e.id,
         showId: e.show_id,
         songId: e.song_id,
