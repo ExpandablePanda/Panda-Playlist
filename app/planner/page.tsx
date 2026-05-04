@@ -683,7 +683,7 @@ function SetlistRow({
   mode: "rehearsal" | "show";
   isDragged: boolean;
   onDragStart: () => void;
-  onDragOver: (e: React.DragEvent, idx: number) => void;
+  onDragOver: (e: React.DragEvent) => void;
   onDragEnd: () => void;
   onRemove: () => void;
   onUpdate: (updates: Partial<SetlistEntry>) => void;
