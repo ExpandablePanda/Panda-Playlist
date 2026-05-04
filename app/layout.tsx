@@ -64,6 +64,9 @@ function NavPill() {
   );
 }
 
+import { NeonAuthUIProvider } from "@neondatabase/auth/react/ui";
+import { authClient } from "@/lib/auth/client";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -72,8 +75,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable}`}>
       <body className="font-sans">
-        {children}
-        <NavPill />
+        <NeonAuthUIProvider authClient={authClient}>
+          {children}
+          <NavPill />
+        </NeonAuthUIProvider>
       </body>
     </html>
   );
