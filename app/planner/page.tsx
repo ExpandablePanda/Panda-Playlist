@@ -353,7 +353,7 @@ function PlannerContent() {
                 mode={plannerMode}
                 isDragged={draggedIndex === idx}
                 onDragStart={() => onDragStart(idx)}
-                onDragOver={(e) => onDragOver(e, idx)}
+                onDragOver={(e: React.DragEvent) => onDragOver(e, idx)}
                 onDragEnd={onDragEnd}
                 onRemove={() => removeFromSetlist(entry.id)}
                 onUpdate={(updates) => updateEntry(entry.id, updates)}
@@ -666,7 +666,29 @@ export default function PlannerPage() {
   );
 }
 
-function SetlistRow({ index, entry, mode, isDragged, onDragStart, onDragOver, onDragEnd, onRemove, onUpdate, onEditSong }: any) {
+function SetlistRow({ 
+  index, 
+  entry, 
+  mode, 
+  isDragged, 
+  onDragStart, 
+  onDragOver, 
+  onDragEnd, 
+  onRemove, 
+  onUpdate, 
+  onEditSong 
+}: {
+  index: string;
+  entry: SetlistEntry;
+  mode: "rehearsal" | "show";
+  isDragged: boolean;
+  onDragStart: () => void;
+  onDragOver: (e: React.DragEvent, idx: number) => void;
+  onDragEnd: () => void;
+  onRemove: () => void;
+  onUpdate: (updates: Partial<SetlistEntry>) => void;
+  onEditSong: (song: Song) => void;
+}) {
   const song = entry.song;
   const isCut = entry.rehearsalStatus === 'scrap';
   
