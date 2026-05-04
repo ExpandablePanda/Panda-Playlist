@@ -1,80 +1,100 @@
 @import "tailwindcss";
 
-:root {
-  --background: #0a0b0f;
-  --foreground: #f5efe8;
-  --panel: rgba(255, 255, 255, 0.05);
-  --panel-strong: rgba(255, 255, 255, 0.08);
-  --line: rgba(255, 255, 255, 0.1);
-  --accent: #f6be74;
-  --accent-strong: #c96d3a;
-  --muted: #b8afa5;
-  --font-display:
-    "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, "Times New Roman", serif;
-  --font-sans:
-    "Avenir Next", Avenir, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono:
-    "SFMono-Regular", "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Fraunces", serif;
+  
+  --color-obsidian-950: #020617;
+  --color-obsidian-900: #0f172a;
+  --color-obsidian-800: #1e293b;
+  
+  --color-accent-primary: #7c3aed;
+  --color-accent-secondary: #fb923c;
+  
+  --radius-card: 32px;
+  --radius-pill: 9999px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+@layer base {
+  body {
+    @apply bg-obsidian-950 text-white antialiased selection:bg-accent-primary/30;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
 }
 
-* {
-  box-sizing: border-box;
+@utility obsidian-bg {
+  background-color: var(--color-obsidian-950);
 }
 
-html {
-  background:
-    radial-gradient(circle at top, rgba(196, 103, 44, 0.22), transparent 28%),
-    linear-gradient(180deg, #150e12 0%, #0a0b0f 38%, #0a0b0f 100%);
+@utility display-title {
+  font-family: var(--font-serif);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -0.02em;
 }
 
-body {
-  min-height: 100vh;
+@utility glass {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+}
+
+@utility planner-card {
+  @apply glass;
+  border-radius: var(--radius-card);
+  padding: 2rem;
+  transition: all 300ms;
+}
+
+@utility badge-key {
+  @apply glass;
+  background-color: rgba(124, 58, 237, 0.1);
+  border-color: rgba(124, 58, 237, 0.3);
+  color: var(--color-accent-primary);
+  font-weight: 900;
+  font-style: italic;
+}
+
+@utility tap-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  transition: all 150ms;
+  cursor: pointer;
+
+  &:active {
+    scale: 0.95;
+  }
+}
+
+@utility orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(120px);
+  pointer-events: none;
+  opacity: 0.2;
+}
+
+@utility orb-purple { background-color: var(--color-accent-primary); }
+@utility orb-amber { background-color: var(--color-accent-secondary); }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
   background: transparent;
-  color: var(--foreground);
-  font-family: var(--font-sans), sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-}
-
-::selection {
-  background: rgba(246, 190, 116, 0.35);
-  color: white;
-}
-
-.panel {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
-  border: 1px solid var(--line);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
-}
-
-.hero-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 28px 28px;
-}
-
-.mono {
-  font-family: var(--font-mono), monospace;
-}
-
-.display {
-  font-family: var(--font-display), serif;
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
 }

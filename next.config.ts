@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["better-sqlite3"],
+  output: 'export',
+  basePath: '/Panda-Playlist',
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;

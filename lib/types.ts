@@ -1,11 +1,13 @@
 export type SongStatus = "active" | "retired" | "private";
-export type ShowStatus = "draft" | "live" | "locked";
+export type ShowStatus = "upcoming" | "completed" | "cancelled";
 export type RequestStatus = "active" | "fulfilled" | "ignored";
-export type SetlistSource = "manual" | "request";
 
-export type Song = {
+export interface Song {
   id: string;
   title: string;
+  artist: string;
+  album?: string;
+  songType: 'original' | 'cover';
   alternateTitles: string[];
   status: SongStatus;
   defaultKey: string;
@@ -13,33 +15,36 @@ export type Song = {
   tempo: string;
   tuning: string;
   durationEstimate: number;
-  lyricsRichText: string;
-  chordsText: string;
-  tabText: string;
+  artworkUrl?: string;
+  lyrics: string;
+  chords: string;
+  tabs: string;
   notes: string;
   tags: string[];
   requestable: boolean;
   createdAt: string;
   updatedAt: string;
-};
+}
 
-export type Show = {
+export interface Show {
   id: string;
-  title: string;
-  venueName: string;
+  date: string;
+  venue: string;
+  location: string; // "City, State" summary
+  address: string;
   city: string;
-  showDate: string;
-  startTime: string;
+  state: string;
+  contactName: string;
+  contactPhone: string;
+  contactEmail: string;
+  rate: number;
   status: ShowStatus;
-  qrSlug: string;
-  currentEntryId: string | null;
-  startedAt: string | null;
-  lockedAt: string | null;
   notes: string;
   createdAt: string;
-};
+  updatedAt: string;
+}
 
-export type SetlistEntry = {
+export interface SetlistEntry {
   id: string;
   showId: string;
   songId: string;
@@ -47,66 +52,19 @@ export type SetlistEntry = {
   plannedKey: string;
   plannedNotes: string;
   performed: boolean;
-  startedAt: string | null;
-  endedAt: string | null;
-  transitionNotes: string;
-  source: SetlistSource;
-  song: Song;
-};
+  rehearsalStatus?: 'worked' | 'needs-work' | 'scrap';
+  rehearsalNotes?: string;
+  actualDuration?: number;
+  song?: Song;
+}
 
-export type AudienceRequest = {
+export interface AudienceRequest {
   id: string;
   showId: string;
   songId: string;
   submittedAt: string;
   voteCount: number;
   status: RequestStatus;
-  requesterSessionId: string;
   message: string;
-  song: Song;
-};
-
-export type ShowEvent = {
-  id: string;
-  showId: string;
-  type:
-    | "show_started"
-    | "song_started"
-    | "song_completed"
-    | "request_received"
-    | "request_upvoted"
-    | "setlist_locked";
-  entityId: string;
-  metadata: Record<string, string | number | boolean | null>;
-  createdAt: string;
-};
-
-export type SongStats = {
-  songId: string;
-  title: string;
-  playCount: number;
-  requestCount: number;
-  requestToPlayRate: number;
-  lastPlayed: string | null;
-};
-
-export type ShowSummary = Show & {
-  totalSongs: number;
-  totalRequests: number;
-  playedSongs: number;
-};
-
-export type ShowReport = {
-  show: Show;
-  entries: SetlistEntry[];
-  requests: AudienceRequest[];
-  metrics: {
-    totalSongs: number;
-    playedSongs: number;
-    totalRequests: number;
-    fulfilledRequests: number;
-    estimatedMinutes: number;
-    capturedMinutes: number;
-    requestConversionRate: number;
-  };
-};
+  song?: Song;
+}
